@@ -1,0 +1,21 @@
+from tkinter import *
+from PIL import Image, ImageDraw
+
+master = Tk()
+
+w = Canvas(master, width=960, height=540, bg="black")
+w.pack()
+
+image = Image.new("RGB", (960, 540), "black")
+draw = ImageDraw.Draw(image)
+
+with open("DS4.txt", "r") as f:
+  for i in f:
+    x = int((i[0:3]))
+    y = int((i[4:7]))
+    w.create_rectangle(x,y,x+1,y+1, fill="white")
+    draw.rectangle([x, y, x+1, y+1], fill="white")
+
+image.save("DS4.png")
+
+master.mainloop()
