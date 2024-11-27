@@ -1,0 +1,45 @@
+from PIL import Image, ImageDraw
+import math
+
+image = Image.new("RGB", (960, 960), "white")
+draw = ImageDraw.Draw(image)
+
+angle = 0.8727
+center = [480, 480]
+
+R = [[math.cos(angle), math.sin(angle), 0],
+     [-math.sin(angle), math.cos(angle), 0],
+     [0, 0, 1]]
+
+with open("DS4.txt", "r") as f:
+    with open("DS4_rotated.txt", "w") as n:
+        
+        n.write("Матриця повороту відносно центру:\n")
+        for i in R:
+            for j in i:
+                s = round(j, 3)
+                n.write(f"{" " + str(s) + " ": ^8}")
+            n.write("\n")
+
+        n.write("\nНові коородинати:\n\n")
+        
+        for i in f:
+            x, y = map(int, i.split())
+            x_center = x - center[0]
+            y_center = center[1] - y
+
+            T = [x_center, y_center, 1]
+
+            S = [0, 0, 0]
+
+            for i in range(3):
+                for j in range(3):
+                    S[i] += T[j] * R[i][j]
+        
+            x_new, y_new = S[0] + 480, 480 - S[1]
+
+            n.write(str(round(x_new, 1)) + " " + str(round(y_new, 1)) + "\n")
+        
+            draw.point([x_new, y_new], fill="blue")
+
+image.save("DS4_rotated.png")
